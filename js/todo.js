@@ -2,17 +2,29 @@ const toDoForm = document.getElementById("todo-form");
 const toDoInput = document.querySelector("#todo-form input");
 const toDoList = document.getElementById("todo-list");
 
-function deleteToDo(event) {
-    // 속성을 자세히 보면 버튼의 부모가 누구인지 알 수 있음
-    // console.dir(event.target.parentElement.innerText);
-    const li = event.target.parentElement;
-    li.remove();
+const TODOS_KEY = "todos";
+
+let toDos = [];
+
+// 바뀐 toDos 내용 저장
+function saveToDos() {
+    localStorage.setItem(TODOS_KEY, JSON.stringify(toDos));
 }
 
+// 삭제된 todo id값과 filter()를 사용해 제거
+function deleteToDo(event) {
+    const li = event.target.parentElement;
+    li.remove();
+    toDos = toDos.filter(toDo => toDo.id !== parseInt(li.id));
+    saveToDos();
+}
+
+// 화면에 todo 출력
 function paintTodo(newTodo) {
     const li = document.createElement("li");
+    li.id = newTodo.id;
     const span = document.createElement("span");
-    span.innerText = newTodo;
+    span.innerText = newTodo.text;
     const button = document.createElement("button");
     button.innerText = "X";
     button.addEventListener("click", deleteToDo);
@@ -25,7 +37,21 @@ function handleToDoSubmit(event) {
     event.preventDefault();
     const newTodo = toDoInput.value;
     toDoInput.value = "";
-    paintTodo(newTodo);
+    const newTodoObj = {
+        text: newTodo,
+        id: Date.now(),
+    };
+    toDos.push(newTodoObj);
+    paintTodo(newTodoObj);
+    saveToDos();
 }
 
 toDoForm.addEventListener("submit", handleToDoSubmit);
+
+const savedToDos = localStorage.getItem(TODOS_KEY);
+
+if (savedToDos !== null) {
+    const parsedToDos = JSON.parse(savedToDos);
+    toDos = parsedToDos;
+    parsedToDos.forEach(paintTodo);
+}
