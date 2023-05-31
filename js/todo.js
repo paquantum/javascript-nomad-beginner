@@ -12,10 +12,7 @@ function saveToDos() {
     localStorage.setItem(TODOS_KEY, JSON.stringify(toDos));
 }
 
-function saveToDos() {
-    localStorage.setItem("todos", JSON.stringify(toDos));
-}
-
+// li id값으로 해당 todo 삭제하고 변경된 내용 저장
 function deleteToDo(event) {
     const li = event.target.parentElement;
     li.remove();
