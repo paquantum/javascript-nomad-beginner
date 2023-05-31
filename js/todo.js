@@ -12,8 +12,6 @@ function saveToDos() {
     localStorage.setItem(TODOS_KEY, JSON.stringify(toDos));
 }
 
-const toDos = [];
-
 function saveToDos() {
     localStorage.setItem("todos", JSON.stringify(toDos));
 }
@@ -27,7 +25,6 @@ function deleteToDo(event) {
 
 // 화면에 todo 출력
 function paintTodo(newTodo) {
-    
     const li = document.createElement("li");
     li.id = newTodo.id;
     const span = document.createElement("span");
